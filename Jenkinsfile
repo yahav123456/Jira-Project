@@ -3,6 +3,8 @@ pipeline {
   
   environment {
     JIRA_CREDENTIALS_ID = 'jira_credentials' // Jenkins credentials ID for Jira
+    JIRA_BASE_URL = 'http://172.19.0.2:8080/' // Jira  URL
+    JIRA_SITE_NAME = 'jira' // Jira site name 
   }
   
   stages {
