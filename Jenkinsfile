@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // שליפת שמות הבראנצ'ים המושפעים מהcommit האחרון
-                    def branches = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | sed -n s/ *origin\\///p', returnStdout: true).trim()
+                    def branches = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | sed -n s/^.*origin\\///p', returnStdout: true).trim()
                     // ניתוב הפלט לתוך מערך
                     def branchList = branches.tokenize('\n').collect { it.trim() }
 
