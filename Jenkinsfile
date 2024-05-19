@@ -13,7 +13,12 @@ pipeline {
                     def issueId = GIT_BRANCH_NAME.replaceAll('origin/', '')
                     
                     // שינוי סטטוס ה-issue ב-Jira באמצעות מזהה מעבר
-                    jiraSetIssueStatus id: issueId, transition: '31'
+                    def transitionInput = [
+                        transition: [
+                            id: '31'
+                        ]
+                    ]
+                    jiraTransitionIssue idOrKey: issueId, input: transitionInput
                 }
             }
         }
@@ -26,7 +31,12 @@ pipeline {
                 def issueId = GIT_BRANCH_NAME.replaceAll('origin/', '')
                 
                 // שינוי סטטוס ה-issue ב-Jira באמצעות מזהה מעבר לאחר הצלחת הפייפליין
-                jiraSetIssueStatus id: issueId, transition: '31'
+                def transitionInput = [
+                    transition: [
+                        id: '31'
+                    ]
+                ]
+                jiraTransitionIssue idOrKey: issueId, input: transitionInput
             }
         }
     }
