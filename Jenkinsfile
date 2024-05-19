@@ -2,24 +2,26 @@ pipeline {
     agent any
 
     environment {
-        GIT_BRANCH_NAME = "${env.GIT_BRANCH}" // לשמור את שם ה-branch
-        JIRA_SITE = 'jira' // הוספת הגדרה זו
+        // שמירת שם ה-branch במשתנה
+        GIT_BRANCH_NAME = "${env.GIT_BRANCH}"
+        // קיצוץ ה-"origin/" משם ה-branch
+        ISSUE_ID = GIT_BRANCH_NAME.replaceAll('origin/', '')
+        // הגדרת כתובת ה-Jira
+        JIRA_SITE = 'jira'
     }
 
     stages {
         stage('Change Jira Issue') {
             steps {
                 script {
-                    // שימוש בשם ה-branch כ-Issue ID
-                    def issueId = GIT_BRANCH_NAME
-                    
-                    // שינוי סטטוס ה-issue ב-Jira באמצעות שם ה-branch
+                    // שימוש ב-Issue ID כפי שהוגדר
                     def transitionInput = [
                         transition: [
                             id: '31'
                         ]
                     ]
-                    jiraTransitionIssue idOrKey: issueId, input: transitionInput
+                    // ביצוע פעולת ה-transition ב-Jira עבור ה-Issue המתאים ל-Issue ID
+                    jiraTransitionIssue idOrKey: ISSUE_ID, input: transitionInput
                 }
             }
         }
@@ -28,16 +30,14 @@ pipeline {
     post {
         success {
             script {
-                // שוב הסרת 'origin/' אם קיים בשם ה-branch לשימוש לאחר הצלחת הפייפליין
-                def issueId = GIT_BRANCH_NAME
-                
-                // שינוי סטטוס ה-issue ב-Jira באמצעות שם ה-branch לאחר הצלחת הפייפליין
+                // שימוש ב-Issue ID כפי שהוגדר
                 def transitionInput = [
                     transition: [
                         id: '31'
                     ]
                 ]
-                jiraTransitionIssue idOrKey: issueId, input: transitionInput
+                // ביצוע פעולת ה-transition ב-Jira עבור ה-Issue המתאים ל-Issue ID
+                jiraTransitionIssue idOrKey: ISSUE_ID, input: transitionInput
             }
         }
     }
