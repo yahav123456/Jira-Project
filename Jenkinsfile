@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         GIT_BRANCH_NAME = "${env.GIT_BRANCH}" // לשמור את שם ה-branch
+        JIRA_SITE = 'jira' // הוספת הגדרה זו
     }
 
     stages {
