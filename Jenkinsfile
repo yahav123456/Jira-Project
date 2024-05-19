@@ -2,15 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Send Branch Name to Jenkins') {
+        stage('Declarative: Checkout SCM') {
             steps {
-                script {
-                    // שליפת שם הבראנץ הנוכחי
-                    def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                checkout scm
+            }
+        }
+    }
 
-                    // שליחת שם הבראנץ הנוכחי ל Jenkins
-                    echo "Branch Name: ${branchName}"
-                }
+    post {
+        always {
+            script {
+                def branchName = sh(script: 'git rev-parse --abbrev-ref $(git log -n 1 --pretty=format:%H)', returnStdout: true).trim()
+                echo "Branch Name: ${branchName}"
             }
         }
     }
