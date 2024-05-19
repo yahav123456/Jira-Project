@@ -1,12 +1,12 @@
 pipeline {
   agent any
-  
+
   environment {
     JIRA_CREDENTIALS_ID = 'jira_credentials' // Jenkins credentials ID for Jira
-    JIRA_BASE_URL = 'http://172.19.0.2:8080' // Jira  URL
+    JIRA_BASE_URL = 'http://172.19.0.2:8080/' // Jira URL
     JIRA_SITE_NAME = 'jira' // Jira site name 
   }
-  
+
   stages {
     stage('Get Last Merged Branch Name') {
       steps {
@@ -15,11 +15,11 @@ pipeline {
           def lastCommitMessage = sh(script: 'git log -1 --pretty=format:%s', returnStdout: true).trim()
 
           // Define a pattern to extract the branch name from the commit message
-          def mergeBranchPattern = ~/Merge pull request #\d+ from (.+)/
+          def mergeBranchPattern = ~/Merge pull request #\d+ from ([\w-]+\/([\w-]+))/
           def matcher = lastCommitMessage =~ mergeBranchPattern
 
           if (matcher.find()) {
-            env.JIRA_ISSUE_KEY = matcher.group(1).trim()
+            env.JIRA_ISSUE_KEY = matcher.group(2).trim()
           } else {
             error("No merge found into 'main'. Unable to determine Jira issue key.")
           }
@@ -46,7 +46,7 @@ pipeline {
       }
     }
   }
-  
+
   post {
     always {
       echo 'Pipeline completed.'
