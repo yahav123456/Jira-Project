@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // שליפת שמות הבראנצ'ים המושפעים מהcommit האחרון
-                    def branches = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | sed -n s/^.*origin\\///p', returnStdout: true).trim()
+                    def branches = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | cut -d \'/\' -f 2', returnStdout: true).trim()
                     // ניתוב הפלט לתוך מערך
                     def branchList = branches.tokenize('\n').collect { it.trim() }
 
@@ -14,7 +14,7 @@ pipeline {
                     echo "Branches: ${branchList}"
 
                     // שליחת שם הבראנץ האחרון ל Jenkins
-                    echo "Branch Name: ${branchList[0]}"
+                    echo "Branch Name: ${branchList.last()}"
                 }
             }
         }
