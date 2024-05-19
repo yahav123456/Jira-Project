@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_BRANCH_NAME = "${env.GIT_BRANCH}" // לשמור את שם ה-branch
+        GIT_BRANCH_NAME = "${env.CHANGE_BRANCH ?: env.GIT_BRANCH}"
         JIRA_SITE = 'jira' // הוספת הגדרה זו
     }
 
