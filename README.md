@@ -36,11 +36,14 @@ Use your chosen configuration and infrastructure as code utility (Terraform/Chef
    - Content Type: Ensure that it's set to application/json. This specification defines how data is transmitted to Jenkins.
    - Which Events to Trigger: Select "Pull Requests". This choice ensures that Jenkins receives notifications whenever a pull request is opened or updated in your repository.
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/githubwebhook1.png?raw=true">
+   ![צילום מסך 2024-05-19 144804](https://github.com/yahav123456/jira_project/assets/166650066/d8fe7804-8a7c-4a76-81ef-d507b8162252)
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/githubwebhook2.png?raw=true">
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/githubwebhook.png?raw=true">
+   ![צילום מסך 2024-05-19 145317](https://github.com/yahav123456/jira_project/assets/166650066/69245088-2f9e-4c02-9869-1bd9608161e9)
+
+
+   ![צילום מסך 2024-05-19 145415](https://github.com/yahav123456/jira_project/assets/166650066/5d1269bb-87a0-47bb-9933-3a76044781f8)
+
 
    
    On Jenkins:
