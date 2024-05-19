@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Declarative: Checkout SCM') {
             steps {
@@ -8,11 +8,12 @@ pipeline {
             }
         }
     }
-
+    
     post {
         always {
             script {
-                def branchName = sh(script: 'git rev-parse --abbrev-ref $(git log -n 1 --pretty=format:%H)', returnStdout: true).trim()
+                def commitId = sh(script: 'git log -n 1 --pretty=format:%H', returnStdout: true).trim()
+                def branchName = sh(script: "git rev-parse --abbrev-ref ${commitId}", returnStdout: true).trim()
                 echo "Branch Name: ${branchName}"
             }
         }
