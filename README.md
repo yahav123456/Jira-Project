@@ -49,21 +49,27 @@ Use your chosen configuration and infrastructure as code utility (Terraform/Chef
    On Jenkins:
    - Install GitHub Integration Plugin: Begin by downloading and installing the GitHub Integration plugin in Jenkins. This plugin facilitates seamless communication between Jenkins and GitHub.
    - Generate GitHub Token: Create a token on GitHub, granting Jenkins the necessary permissions. Then, configure this token in Jenkins under "Manage Jenkins."
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/gittoken.png?raw=true">
+   ![צילום מסך 2024-05-19 145929](https://github.com/yahav123456/jira_project/assets/166650066/22651fab-edd5-472f-8682-f64a34369a59)
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/gittoken2.png?raw=true">
+
+   ![צילום מסך 2024-05-19 145959](https://github.com/yahav123456/jira_project/assets/166650066/f261b019-1d3b-4204-831e-73c3f1016cf7)
+
 
    - Configure Job Settings: In your Jenkins job settings, define the GitHub project using your repository's URL. Additionally, set up Build Triggers to include "GitHub Pull Requests" with the desired trigger event (e.g., PR closed), along with "GitHub hook trigger for GITScm polling."
    - Define Pipeline: Within the pipeline section, specify the path to your Jenkinsfile. This file serves as the blueprint for your Jenkins builds, defining the steps and actions to be executed.
 By implementing these configurations, you enable smooth communication between Jenkins and GitHub. This integration empowers Jenkins to automatically trigger builds and execute predefined actions in response to events occurring within your GitHub repository.
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/jenkinsconfig1.png?raw=true">
+   ![צילום מסך 2024-05-19 150351](https://github.com/yahav123456/jira_project/assets/166650066/8f2f053b-1a1d-4f6a-add3-1c22e70fecb9)
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/jenkinsconfig2.png?raw=true">
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/jenkinsconfig3.png?raw=true">
+   ![צילום מסך 2024-05-19 150448](https://github.com/yahav123456/jira_project/assets/166650066/0eaed3de-8a26-4385-ac47-b7f7e8039225)
 
-   <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/jenkinsconfig4.png?raw=true">
+
+   ![צילום מסך 2024-05-19 150750](https://github.com/yahav123456/jira_project/assets/166650066/f34bacfc-ac61-4163-9526-021ab3325675)
+
+
+   ![צילום מסך 2024-05-19 150915](https://github.com/yahav123456/jira_project/assets/166650066/e3fc23a3-e9bc-4d6f-bef0-878202658671)
+
 
 
 5. **Jenkins File**
@@ -73,4 +79,5 @@ By implementing these configurations, you enable smooth communication between Je
 
 Hope you enjoy the project ! 
 
- <img src="https://github.com/DorAvissar/JiraJenkinsIntegration/blob/main/assets/finalstep.png?raw=true">
+ ![צילום מסך 2024-05-19 151003](https://github.com/yahav123456/jira_project/assets/166650066/25c32ca8-3c91-4659-a909-97e86ca5243d)
+
