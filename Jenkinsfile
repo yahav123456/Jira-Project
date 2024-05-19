@@ -1,57 +1,55 @@
 pipeline {
-    agent any
+  agent any
+  
+  environment {
+    JIRA_CREDENTIALS_ID = 'jira_credentials' // Jenkins credentials ID for Jira
+    JIRA_BASE_URL = 'http://172.19.0.2:8080/' // Jira  URL
+    JIRA_SITE_NAME = 'jira' // Jira site name 
+  }
+  
+  stages {
+    stage('Get Last Merged Branch Name') {
+      steps {
+        script {
+          // Get the last commit message and extract the branch name
+          def lastCommitMessage = sh(script: 'git log -1 --pretty=format:%s', returnStdout: true).trim()
 
-    triggers {
-        scm 
+          // Define a pattern to extract the branch name from the commit message
+          def mergeBranchPattern = ~/Merge pull request #\d+ from (.+)/
+          def matcher = lastCommitMessage =~ mergeBranchPattern
+
+          if (matcher.find()) {
+            env.JIRA_ISSUE_KEY = matcher.group(1).trim()
+          } else {
+            error("No merge found into 'main'. Unable to determine Jira issue key.")
+          }
+        }
+      }
     }
 
-    stages {
-        stage('זיהוי שם ה-Branch האחרון') {
-            steps {
-                script {
-                    echo "מתחיל בקריאה ל־GitHub לשם ה־branch"
-
-                    // קבלת שם ה-Commit האחרון ב-Branch "main"
-                    def mainBranchCommit = sh(script: "git rev-parse origin/main", returnStdout: true).trim()
-                    echo "שם ה-Commit האחרון ב-Branch 'main': ${mainBranchCommit}"
-
-                    // קבלת שם ה-Branch מה-Commit האחרון
-                    def branchName = sh(script: "git branch --contains ${mainBranchCommit} | head -1 | sed 's/remotes\\/origin\\///'", returnStdout: true).trim()
-                    echo "שם ה-Branch האחרון שמוזג ל-Main: ${branchName}"
-
-                    // הגדרת משתנה סביבה עם שם ה-Branch
-                    env.BRANCH_NAME = branchName
-
-                    echo "סיים בקריאה ל־GitHub לשם ה־branch"
-
-                    // Checkout מה־GitHub
-                    echo "בוצע Checkout מה־GitHub"
-                    checkout scm
-                    echo "סיים Checkout מה־GitHub"
-                }
+    stage('Transition Jira Issue to Done') {
+      steps {
+        script {
+          def issueKey = env.JIRA_ISSUE_KEY
+          if (issueKey) {
+            withEnv(["JIRA_SITE=jira"]) {
+              def transitionInput = [
+                transition: [id: '31']
+              ]
+              
+              jiraTransitionIssue idOrKey: issueKey, input: transitionInput
             }
+          } else {
+            error("Jira issue key is null. Cannot transition to Done.")
+          }
         }
-
-        stage('JIRA') {
-            when {
-                expression { env.BRANCH_NAME != null }
-            }
-            steps {
-                echo "שם ה-Branch שמוזג ל-Main הוא: ${env.BRANCH_NAME}"
-
-                withEnv(['JIRA_SITE=jira']) {
-                    def transitionInput =
-                    [
-                        transition: [
-                            id: '31'
-                        ]
-                    ]
-
-                    // שימוש בשם ה־branch כחלק משם ה־issue ב־Jira
-                    def issueName = env.BRANCH_NAME.toUpperCase() // לדוגמה, שימוש בשם ה־branch באותיות גדולות
-                    jiraTransitionIssue idOrKey: issueName, input: transitionInput
-                }
-            }
-        }
+      }
     }
+  }
+  
+  post {
+    always {
+      echo 'Pipeline completed.'
+    }
+  }
 }
