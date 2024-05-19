@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GIT_BRANCH_NAME = "${env.CHANGE_BRANCH ?: env.GIT_BRANCH}"
+        GIT_BRANCH_NAME = "${env.GIT_BRANCH}" // לשמור את שם ה-branch
         JIRA_SITE = 'jira' // הוספת הגדרה זו
     }
 
@@ -10,10 +10,10 @@ pipeline {
         stage('Change Jira Issue') {
             steps {
                 script {
-                    // הסרת 'origin/' אם קיים בשם ה-branch
-                    def issueId = GIT_BRANCH_NAME.replaceAll('origin/', '')
+                    // שימוש בשם ה-branch כ-Issue ID
+                    def issueId = GIT_BRANCH_NAME
                     
-                    // שינוי סטטוס ה-issue ב-Jira באמצעות מזהה מעבר
+                    // שינוי סטטוס ה-issue ב-Jira באמצעות שם ה-branch
                     def transitionInput = [
                         transition: [
                             id: '31'
@@ -29,9 +29,9 @@ pipeline {
         success {
             script {
                 // שוב הסרת 'origin/' אם קיים בשם ה-branch לשימוש לאחר הצלחת הפייפליין
-                def issueId = GIT_BRANCH_NAME.replaceAll('origin/', '')
+                def issueId = GIT_BRANCH_NAME
                 
-                // שינוי סטטוס ה-issue ב-Jira באמצעות מזהה מעבר לאחר הצלחת הפייפליין
+                // שינוי סטטוס ה-issue ב-Jira באמצעות שם ה-branch לאחר הצלחת הפייפליין
                 def transitionInput = [
                     transition: [
                         id: '31'
