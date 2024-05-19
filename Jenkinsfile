@@ -1,34 +1,53 @@
 pipeline {
     agent any
 
+    environment {
+        // שם ה-branch בו עשינו merge
+        MERGED_BRANCH_NAME = ""
+        // הגדרת כתובת ה-Jira
+        JIRA_SITE = 'jira'
+    }
+
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-        
         stage('Check Merge Branch') {
             steps {
                 script {
-                    // שליפת שם הבראנץ מההיסטוריה של הקומיטים
-                    def mergedBranch = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | sed -n \'s/ *origin\\///p\'', returnStdout: true).trim()
-                    
-                    // הצגת הבראנץ שהושג
-                    echo "Merged branch name: ${mergedBranch}"
-                    
-                    // בדיקה אם התקבל שם של בראנץ
-                    if (mergedBranch) {
-                        // עריכת הפעולות שלאחרי הבדיקה
-                    } else {
-                        error "Failed to determine merged branch name."
-                    }
+                    // קריאה ל-git לקבל את שמות ה-branches הממוזגים ל-HEAD
+                    def mergedBranch = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | sed -n s/ *origin\\///p', returnStdout: true).trim()
+                    // השמת שם ה-branch הממוזג במשתנה
+                    MERGED_BRANCH_NAME = mergedBranch
                 }
             }
         }
-        
-        // הוספת שלבים נוספים כפי שנדרש...
+
+        stage('Change Jira Issue') {
+            steps {
+                script {
+                    // שימוש ב-Issue ID כפי שהוגדר
+                    def transitionInput = [
+                        transition: [
+                            id: '31'
+                        ]
+                    ]
+                    // ביצוע פעולת ה-transition ב-Jira עבור ה-Issue המתאים ל-Issue ID
+                    jiraTransitionIssue idOrKey: MERGED_BRANCH_NAME, input: transitionInput
+                }
+            }
+        }
     }
-    
-    // הוספת מצבי סיום כפי שנדרש...
+
+    post {
+        success {
+            script {
+                // שימוש ב-Issue ID כפי שהוגדר
+                def transitionInput = [
+                    transition: [
+                        id: '31'
+                    ]
+                ]
+                // ביצוע פעולת ה-transition ב-Jira עבור ה-Issue המתאים ל-Issue ID
+                jiraTransitionIssue idOrKey: MERGED_BRANCH_NAME, input: transitionInput
+            }
+        }
+    }
 }
