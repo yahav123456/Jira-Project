@@ -1,18 +1,33 @@
-node {
-  stage('JIRA') {
-    // הנח שהשם של ה-branch שממנו נעשה merge נשמר כ-BRANCH_NAME
-    def branchName = env.BRANCH_NAME
+pipeline {
+    agent any
 
-    withEnv(['JIRA_SITE=jira']) {
-      def transitionInput =
-      [
-          transition: [
-              id: '31'
-          ]
-      ]
-
-      // משתמש בשם ה-branch כ-ID של ה-issue
-      jiraTransitionIssue idOrKey: branchName, input: transitionInput
+    environment {
+        GIT_BRANCH_NAME = "${env.GIT_BRANCH}" // לשמור את שם ה-branch
     }
-  }
+
+    stages {
+        stage('Change Jira Issue') {
+            steps {
+                script {
+                    // הסרת 'origin/' אם קיים בשם ה-branch
+                    def issueId = GIT_BRANCH_NAME.replaceAll('origin/', '')
+                    
+                    // שינוי סטטוס ה-issue ב-Jira באמצעות מזהה מעבר
+                    jiraSetIssueStatus id: issueId, transition: '31'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            script {
+                // שוב הסרת 'origin/' אם קיים בשם ה-branch לשימוש לאחר הצלחת הפייפליין
+                def issueId = GIT_BRANCH_NAME.replaceAll('origin/', '')
+                
+                // שינוי סטטוס ה-issue ב-Jira באמצעות מזהה מעבר לאחר הצלחת הפייפליין
+                jiraSetIssueStatus id: issueId, transition: '31'
+            }
+        }
+    }
 }
