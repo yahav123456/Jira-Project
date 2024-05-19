@@ -5,12 +5,16 @@ pipeline {
         stage('Send Branch Name to Jenkins') {
             steps {
                 script {
-                    // שליפת שם הבראנץ ממשתנה הסביבה GIT_BRANCH
-                    def branchName = env.GIT_BRANCH
-                    // ניקוי שם הבראנץ מתווים נוספים
-                    branchName = branchName.replaceAll('origin/', '')
-                    // שליחת שם הבראנץ ל Jenkins
-                    echo "Branch Name: ${branchName}"
+                    // שליפת שמות הבראנצ'ים המושפעים מהcommit האחרון
+                    def branches = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | sed -n s/ *origin\\///p', returnStdout: true).trim()
+                    // ניתוב הפלט לתוך מערך
+                    def branchList = branches.tokenize('\n').collect { it.trim() }
+
+                    // הדפסת רשימת הבראנצ'ים לצורך בדיקה
+                    echo "Branches: ${branchList}"
+
+                    // שליחת שם הבראנץ האחרון ל Jenkins
+                    echo "Branch Name: ${branchList[0]}"
                 }
             }
         }
