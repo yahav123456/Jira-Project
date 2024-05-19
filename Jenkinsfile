@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        scm * // הפעלת ה-Pipeline בכל Push ל-Git
+    }
+
     stages {
         stage('זיהוי שם ה-Branch האחרון') {
             steps {
@@ -13,8 +17,12 @@ pipeline {
                     def branchName = sh(script: "git branch --contains ${mainBranchCommit} | head -1 | sed 's/remotes/origin\/HEAD -> //'", returnStdout: true).trim()
                     echo "שם ה-Branch האחרון שמוזג ל-Main: ${branchName}"
 
-                    // הגדרת משתנה סביבה עם שם ה-Branch
-                    env.BRANCH_NAME = branchName
+                    // בדיקה אם שם ה-Branch תואם את פרויקט 6
+                    if (branchName.contains("PROJ-6")) {
+                        echo "ה-Branch שמוזג ל-Main הוא פרויקט 6!"
+                    } else {
+                        echo "ה-Branch שמוזג ל-Main אינו פרויקט 6."
+                    }
                 }
             }
         }
