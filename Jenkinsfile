@@ -23,6 +23,9 @@ pipeline {
                     } else {
                         echo "ה-Branch שמוזג ל-Main אינו פרויקט 6."
                     }
+=======
+                    // הגדרת משתנה סביבה עם שם ה-Branch
+                    env.BRANCH_NAME = branchName
                 }
             }
         }
