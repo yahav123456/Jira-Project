@@ -1,21 +1,20 @@
 pipeline {
     agent any
-
+    
     stages {
-        stage('Send Branch Name to Jenkins') {
+        stage('Declarative: Checkout SCM') {
             steps {
-                script {
-                    // שליפת שמות הבראנצ'ים המושפעים מהcommit האחרון
-                    def branches = sh(script: 'git branch -r --contains HEAD | grep -v HEAD | cut -d \'/\' -f 2', returnStdout: true).trim()
-                    // ניתוב הפלט לתוך מערך
-                    def branchList = branches.tokenize('\n').collect { it.trim() }
-
-                    // הדפסת רשימת הבראנצ'ים לצורך בדיקה
-                    echo "Branches: ${branchList}"
-
-                    // שליחת שם הבראנץ האחרון ל Jenkins
-                    echo "Branch Name: ${branchList.last()}"
-                }
+                checkout scm
+            }
+        }
+    }
+    
+    post {
+        always {
+            script {
+                def commitId = sh(script: 'git log -n 1 --pretty=format:%H', returnStdout: true).trim()
+                def branchName = sh(script: "git for-each-ref --format='%(refname:short)' --points-at ${commitId} refs/heads/", returnStdout: true).trim()
+                echo "Branch Name: ${branchName}"
             }
         }
     }
