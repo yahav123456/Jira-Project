@@ -2,19 +2,15 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from Git
-                checkout scm
-            }
-        }
-
-        stage('Get Branch Name') {
+        stage('Send Branch Name to Jenkins') {
             steps {
                 script {
-                    // Extract branch name from Git environment variable
-                    def branchName = env.BRANCH_NAME
-                    echo "Merged branch name: ${branchName}"
+                    // שליפת שם הבראנץ ממשתנה הסביבה GIT_BRANCH
+                    def branchName = env.GIT_BRANCH
+                    // ניקוי שם הבראנץ מתווים נוספים
+                    branchName = branchName.replaceAll('origin/', '')
+                    // שליחת שם הבראנץ ל Jenkins
+                    echo "Branch Name: ${branchName}"
                 }
             }
         }
