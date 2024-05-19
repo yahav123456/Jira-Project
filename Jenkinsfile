@@ -22,5 +22,25 @@ pipeline {
                 }
             }
         }
+
+        stage('JIRA') {
+            when {
+                expression { env.BRANCH_NAME != null }
+            }
+            steps {
+                withEnv(['JIRA_SITE=jira']) {
+                    def transitionInput =
+                    [
+                        transition: [
+                            id: '31'
+                        ]
+                    ]
+
+                    // שימוש בשם ה־branch כחלק משם ה־issue ב־Jira
+                    def issueName = env.BRANCH_NAME.toUpperCase() // לדוגמה, שימוש בשם ה־branch באותיות גדולות
+                    jiraTransitionIssue idOrKey: issueName, input: transitionInput
+                }
+            }
+        }
     }
 }
