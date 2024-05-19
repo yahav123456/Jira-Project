@@ -9,6 +9,8 @@ pipeline {
         stage('זיהוי שם ה-Branch האחרון') {
             steps {
                 script {
+                    echo "מתחיל בקריאה ל־GitHub לשם ה־branch"
+
                     // קבלת שם ה-Commit האחרון ב-Branch "main"
                     def mainBranchCommit = sh(script: "git rev-parse origin/main", returnStdout: true).trim()
                     echo "שם ה-Commit האחרון ב-Branch 'main': ${mainBranchCommit}"
@@ -19,6 +21,8 @@ pipeline {
 
                     // הגדרת משתנה סביבה עם שם ה-Branch
                     env.BRANCH_NAME = branchName
+
+                    echo "סיים בקריאה ל־GitHub לשם ה־branch"
                 }
             }
         }
@@ -28,6 +32,8 @@ pipeline {
                 expression { env.BRANCH_NAME != null }
             }
             steps {
+                echo "שם ה-Branch שמוזג ל-Main הוא: ${env.BRANCH_NAME}"
+
                 withEnv(['JIRA_SITE=jira']) {
                     def transitionInput =
                     [
