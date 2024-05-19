@@ -23,6 +23,11 @@ pipeline {
                     env.BRANCH_NAME = branchName
 
                     echo "סיים בקריאה ל־GitHub לשם ה־branch"
+
+                    // Checkout מה־GitHub
+                    echo "בוצע Checkout מה־GitHub"
+                    checkout scm
+                    echo "סיים Checkout מה־GitHub"
                 }
             }
         }
