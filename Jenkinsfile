@@ -28,8 +28,6 @@ pipeline {
                 expression { env.BRANCH_NAME != null }
             }
             steps {
-                echo "שם ה-Branch שמוזג ל-Main הוא: ${env.BRANCH_NAME}"
-
                 withEnv(['JIRA_SITE=jira']) {
                     def transitionInput =
                     [
