@@ -12,6 +12,8 @@ Use your chosen configuration and infrastructure as code utility (Terraform/Chef
    c. Move the Jira issue to “Done”
 
 ### So, lets solve it: 
+![diagram jpg](https://github.com/yahav123456/jira_project/assets/166650066/ae2db4c2-96bb-40cd-bb44-e50fe9b51a40)
+
 
 1. **Creating docker-compose file with jira and jenkins**
 - I used Docker Compose to run all environments locally, aiming for convenience and efficiency, you can check out the file in the repository. 
